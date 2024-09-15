@@ -18,7 +18,22 @@ Resources:
         info:
           title: "DevOpsBot API"
           version: "1.0"
-        paths: {}
+        paths:
+          /example:
+            get:
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    type: "string"
+              x-amazon-apigateway-integration:
+                httpMethod: "POST"
+                type: "mock"
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseTemplates:
+                      application/json: "{\"message\": \"Hello World\"}"
       Parameters:
         endpointConfigurationTypes: "REGIONAL"
 
