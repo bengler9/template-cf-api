@@ -8,7 +8,7 @@ Resources:
   API:
     Type: AWS::Serverless::Api
     Properties:
-      ApiKeySourceType: 'AUTHORIZER'
+      ApiKeySourceType: 'HEADER'
       Auth:
         DefaultAuthorizer: MyCognitoAuthorizer
         Authorizers:
