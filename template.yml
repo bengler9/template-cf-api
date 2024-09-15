@@ -6,20 +6,34 @@ Parameters:
     Type: String
 Resources:
   API:
-    Type: AWS::Serverless::Api
+    Type: AWS::ApiGateway::RestApi
     Properties:
       ApiKeySourceType: 'HEADER'
-      Auth:
-        DefaultAuthorizer: MyCognitoAuthorizer
-        Authorizers:
-          MyCognitoAuthorizer:
-            UserPoolArn: !Ref USERPOOLARN
-      Cors:
-        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
-        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-        AllowOrigin: "'*'"
+      Name: "ApiName"
       EndpointConfiguration: 
         Types: 
           - "REGIONAL"
-      Name: "ApiName"
+      Body:
+        swagger: "2.0"
+        info:
+          title: "DevOpsBot API"
+          version: "1.0"
+        paths: {}
+      Parameters:
+        endpointConfigurationTypes: "REGIONAL"
+
+  ApiGatewayAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      Name: MyCognitoAuthorizer
+      Type: COGNITO_USER_POOLS
+      IdentitySource: method.request.header.Authorization
+      RestApiId: !Ref API
+      ProviderARNs:
+        - !Ref USERPOOLARN
+
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref API
       StageName: "dev"
